@@ -38,3 +38,11 @@ keymap.set("n", "<C-u>", "<C-u>zz")
 -- Keep search terms centered
 keymap.set("n", "n", "nzzzv")
 keymap.set("n", "N", "Nzzzv")
+
+-- LSP Global keymaps (available without LSP buffer)
+keymap.set("n", "<leader>xx", "<cmd>TroubleToggle<CR>", { desc = "Open/close trouble list" })
+keymap.set("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<CR>", { desc = "Open trouble workspace diagnostics" })
+keymap.set("n", "<leader>xd", "<cmd>TroubleToggle document_diagnostics<CR>", { desc = "Open trouble document diagnostics" })
+
+-- Formatting
+keymap.set("n", "<leader>f", vim.lsp.buf.format, { desc = "Format file" })
