@@ -133,12 +133,13 @@ return {
           },
         },
         filters = {
-          dotfiles = false,
-          custom = { ".git", "node_modules", ".cache" },
+          dotfiles = false,  -- Show hidden files
+          git_ignored = false,  -- Show git ignored files
+          custom = { "node_modules", ".cache" },  -- Remove .git from custom filter
         },
         git = {
           enable = true,
-          ignore = false,
+          ignore = false,  -- Show files in .gitignore
         },
       })
       -- Keymaps
@@ -808,6 +809,42 @@ return {
           NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
         },
       })
+    end,
+  },
+
+  -- Markdown preview with live rendering
+  {
+    "OXY2DEV/markview.nvim",
+    lazy = false, -- Should not be lazy loaded
+    priority = 49, -- Load after colorscheme
+    ft = { "markdown", "md" }, -- Only load for markdown files
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    },
+    config = function()
+      require("markview").setup({
+        -- Disable runtime path check message
+        experimental = {
+          check_rtp_message = false,  -- Hide the load order warning message
+        },
+        -- Enable hybrid mode by default (shows preview and source)
+        preview = {
+          modes = { "n", "no", "c" },
+          hybrid_modes = { "n" },
+
+          -- This will be used in hybrid mode
+          callbacks = {
+            on_enable = function(_, win)
+              vim.wo[win].conceallevel = 2
+              vim.wo[win].concealcursor = "nc"
+            end,
+          },
+        },
+      })
+
+      -- Keymaps for markview
+      vim.keymap.set("n", "<leader>m", "<cmd>Markview<CR>", { desc = "Toggle Markview" })
     end,
   },
 }
