@@ -6,28 +6,32 @@ local keymap = vim.keymap
 -- LSP keybindings function
 local on_attach = function(client, bufnr)
   local opts = { noremap = true, silent = true, buffer = bufnr }
-  
-  -- Key mappings
-  keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts) -- show definition, references
-  keymap.set("n", "gD", vim.lsp.buf.declaration, opts) -- go to declaration
-  keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts) -- show lsp definitions
-  keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
-  keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
-  keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts) -- see available code actions
-  keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts) -- smart rename
-  keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show diagnostics for file
-  keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts) -- show diagnostics for line
-  keymap.set("n", "[d", vim.diagnostic.goto_prev, opts) -- jump to previous diagnostic in buffer
-  keymap.set("n", "]d", vim.diagnostic.goto_next, opts) -- jump to next diagnostic in buffer
-  keymap.set("n", "K", vim.lsp.buf.hover, opts) -- show documentation for what is under cursor
-  keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
+
+  -- Key mappings using Lspsaga
+  keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts)
+  keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+  keymap.set("n", "gd", "<cmd>Lspsaga goto_definition<CR>", opts)
+  keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
+  keymap.set("n", "gt", "<cmd>Lspsaga goto_type_definition<CR>", opts)
+  keymap.set({ "n", "v" }, "<leader>ca", "<cmd>Lspsaga code_action<CR>", opts)
+  keymap.set("n", "<leader>rn", "<cmd>Lspsaga rename<CR>", opts)
+  keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
+  keymap.set("n", "<leader>d", "<cmd>Lspsaga show_line_diagnostics<CR>", opts)
+  keymap.set("n", "[d", "<cmd>Lspsaga diagnostic_jump_prev<CR>", opts)
+  keymap.set("n", "]d", "<cmd>Lspsaga diagnostic_jump_next<CR>", opts)
+  keymap.set("n", "K", "<cmd>Lspsaga hover_doc<CR>", opts)
+  keymap.set("n", "<leader>o", "<cmd>Lspsaga outline<CR>", opts)
+  keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts)
+
+  -- Signature help
+  keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
 end
 
 -- Used to enable autocompletion (assign to every lsp server config)
 local capabilities = cmp_nvim_lsp.default_capabilities()
 
 -- Change the Diagnostic symbols in the sign column (gutter)
-local signs = { Error = "E", Warn = "W", Hint = "H", Info = "I" }
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
@@ -37,11 +41,28 @@ end
 vim.diagnostic.config({
   virtual_text = {
     prefix = "●",
+    source = "if_many",
   },
   update_in_insert = false,
+  underline = true,
+  severity_sort = true,
   float = {
+    focusable = false,
+    style = "minimal",
+    border = "rounded",
     source = "always",
+    header = "",
+    prefix = "",
   },
+})
+
+-- Add border to hover windows
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+  border = "rounded",
+})
+
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+  border = "rounded",
 })
 
 -- Language server configurations
@@ -58,6 +79,9 @@ local servers = {
           library = vim.api.nvim_get_runtime_file("", true),
           checkThirdParty = false,
         },
+        completion = {
+          callSnippet = "Replace",
+        },
         telemetry = { enable = false },
       },
     },
@@ -71,45 +95,11 @@ local servers = {
           autoSearchPaths = true,
           diagnosticMode = "workspace",
           useLibraryCodeForTypes = true,
+          typeCheckingMode = "basic",
         },
       },
     },
   },
-
-  -- Java (note: jdtls is usually configured separately for better experience)
-  jdtls = {},
-
-  -- C/C++
-  clangd = {
-    cmd = {
-      "clangd",
-      "--background-index",
-      "--clang-tidy",
-      "--header-insertion=iwyu",
-      "--completion-style=detailed",
-      "--function-arg-placeholders",
-      "--fallback-style=llvm",
-    },
-  },
-
-  -- C#
-  omnisharp = {
-    cmd = { "omnisharp", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
-  },
-
-  -- Rust
-  rust_analyzer = {
-    settings = {
-      ["rust-analyzer"] = {
-        cargo = {
-          allFeatures = true,
-        },
-      },
-    },
-  },
-
-  -- Bash
-  bashls = {},
 
   -- TypeScript/JavaScript
   ts_ls = {
@@ -139,17 +129,105 @@ local servers = {
     },
   },
 
-  -- Go
-  gopls = {},
+  -- HTML
+  html = {
+    settings = {
+      html = {
+        format = {
+          templating = true,
+          wrapLineLength = 120,
+          wrapAttributes = "auto",
+        },
+        hover = {
+          documentation = true,
+          references = true,
+        },
+      },
+    },
+  },
 
-  -- SQL
-  sqlls = {},
+  -- CSS
+  cssls = {
+    settings = {
+      css = {
+        validate = true,
+        lint = {
+          unknownAtRules = "warning",
+        },
+      },
+    },
+  },
+
+  -- Tailwind CSS
+  tailwindcss = {
+    filetypes = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact" },
+    settings = {
+      tailwindCSS = {
+        experimental = {
+          classRegex = {
+            { "clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+            { "cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+          },
+        },
+      },
+    },
+  },
+
+  -- Emmet
+  emmet_ls = {
+    filetypes = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact" },
+  },
+
+  -- Go
+  gopls = {
+    settings = {
+      gopls = {
+        analyses = {
+          unusedparams = true,
+        },
+        staticcheck = true,
+        gofumpt = true,
+      },
+    },
+  },
+
+  -- Rust
+  rust_analyzer = {
+    settings = {
+      ["rust-analyzer"] = {
+        cargo = {
+          allFeatures = true,
+        },
+        checkOnSave = {
+          command = "clippy",
+        },
+      },
+    },
+  },
+
+  -- Bash
+  bashls = {},
 
   -- JSON
-  jsonls = {},
+  jsonls = {
+    settings = {
+      json = {
+        validate = { enable = true },
+      },
+    },
+  },
 
   -- YAML
-  yamlls = {},
+  yamlls = {
+    settings = {
+      yaml = {
+        schemaStore = {
+          enable = true,
+        },
+      },
+    },
+  },
+
 }
 
 -- Setup each server
