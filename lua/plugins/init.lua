@@ -154,6 +154,9 @@ return {
     version = "*",
     dependencies = "nvim-tree/nvim-web-devicons",
     config = function()
+      -- Check if mouse is available
+      local has_mouse = vim.o.mouse ~= ""
+
       require("bufferline").setup({
         options = {
           mode = "buffers",
@@ -161,8 +164,8 @@ return {
           themable = true,
           numbers = "none",
           close_command = "bdelete! %d",
-          right_mouse_command = "bdelete! %d",
-          left_mouse_command = "buffer %d",
+          right_mouse_command = has_mouse and "bdelete! %d" or nil,
+          left_mouse_command = has_mouse and "buffer %d" or nil,
           middle_mouse_command = nil,
           indicator = {
             icon = "▎",
