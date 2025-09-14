@@ -5,8 +5,6 @@ local keymap = vim.keymap
 
 -- LSP keybindings function
 local on_attach = function(client, bufnr)
-  -- Ensure bufnr is a valid number
-  bufnr = bufnr or vim.api.nvim_get_current_buf()
   local opts = { noremap = true, silent = true, buffer = bufnr }
 
   -- Key mappings using Lspsaga
