@@ -31,3 +31,6 @@ require("lazy").setup("plugins", {
 require("config.options")
 require("config.keymaps")
 require("config.netrw")
+
+-- Temporary debug for bufnr issue (remove after fixing)
+-- require("config.debug-bufnr")

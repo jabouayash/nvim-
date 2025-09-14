@@ -629,16 +629,11 @@ return {
           markdown = { "prettier" },
           graphql = { "prettier" },
         },
-        format_on_save = function(bufnr)
-          -- Ensure bufnr is a valid number
-          if type(bufnr) ~= "number" then
-            bufnr = vim.api.nvim_get_current_buf()
-          end
-          return {
-            timeout_ms = 500,
-            lsp_fallback = true,
-          }
-        end,
+        format_on_save = {
+          timeout_ms = 500,
+          lsp_fallback = true,
+          quiet = true, -- Don't show errors if formatter fails
+        },
       })
     end,
   },
