@@ -236,6 +236,34 @@ local servers = {
     enable_import_completion = true,
   },
 
+  -- Java
+  jdtls = {
+    cmd = { "jdtls" },
+    settings = {
+      java = {
+        signatureHelp = { enabled = true },
+        contentProvider = { preferred = "fernflower" },
+        completion = {
+          favoriteStaticMembers = {
+            "org.hamcrest.MatcherAssert.assertThat",
+            "org.hamcrest.Matchers.*",
+            "org.hamcrest.CoreMatchers.*",
+            "org.junit.jupiter.api.Assertions.*",
+            "java.util.Objects.requireNonNull",
+            "java.util.Objects.requireNonNullElse",
+            "org.mockito.Mockito.*",
+          },
+        },
+        sources = {
+          organizeImports = {
+            starThreshold = 9999,
+            staticStarThreshold = 9999,
+          },
+        },
+      },
+    },
+  },
+
 }
 
 -- Setup each server
