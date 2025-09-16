@@ -630,11 +630,17 @@ return {
           markdown = { "prettier" },
           graphql = { "prettier" },
         },
-        format_on_save = {
-          timeout_ms = 500,
-          lsp_fallback = true,
-          quiet = true, -- Don't show errors if formatter fails
-        },
+        -- Dynamic format on save based on global variable
+        format_on_save = function(bufnr)
+          if vim.g.format_on_save then
+            return {
+              timeout_ms = 500,
+              lsp_fallback = true,
+              quiet = true,
+            }
+          end
+          return false
+        end,
       })
     end,
   },

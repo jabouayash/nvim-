@@ -88,13 +88,24 @@ keymap.set("n", "<leader>xl", "<cmd>TroubleToggle loclist<CR>", { desc = "Locati
 keymap.set("n", "<leader>xq", "<cmd>TroubleToggle quickfix<CR>", { desc = "Quickfix list" })
 
 -- Formatting
-keymap.set("n", "<leader>fm", function()
+keymap.set({ "n", "v" }, "<leader>fm", function()
   require("conform").format({
     lsp_fallback = true,
     async = false,
-    timeout_ms = 500,
+    timeout_ms = 1000,
   })
-end, { desc = "Format file" })
+end, { desc = "Format file or selection" })
+
+-- Toggle format on save
+vim.g.format_on_save = false
+keymap.set("n", "<leader>tf", function()
+  vim.g.format_on_save = not vim.g.format_on_save
+  if vim.g.format_on_save then
+    vim.notify("Format on save: ON", vim.log.levels.INFO)
+  else
+    vim.notify("Format on save: OFF", vim.log.levels.INFO)
+  end
+end, { desc = "Toggle format on save" })
 
 -- Better indenting
 keymap.set("v", "<", "<gv", { desc = "Indent left" })
