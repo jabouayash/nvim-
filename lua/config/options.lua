@@ -78,6 +78,7 @@ opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 -- Performance
 opt.lazyredraw = false
 opt.timeoutlen = 500  -- Increased for Which-key
+opt.ttimeoutlen = 10  -- Faster escape key response
 
 -- Folding
 opt.foldmethod = "expr"

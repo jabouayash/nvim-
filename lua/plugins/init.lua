@@ -559,6 +559,7 @@ return {
           "ts_ls", -- TypeScript/JavaScript
           "rust_analyzer",
           -- "gopls", -- Requires Go to be installed
+          "omnisharp", -- C# / .NET
           "bashls",
           "jsonls",
           "yamlls",
@@ -777,6 +778,8 @@ return {
       require("persistence").setup({
         dir = vim.fn.expand(vim.fn.stdpath("config") .. "/session/"),
         options = { "buffers", "curdir", "tabpages", "winsize" },
+        pre_save = nil, -- Disable auto-save hook
+        save_empty = false, -- Don't save empty sessions
       })
     end,
   },
