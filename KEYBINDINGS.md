@@ -31,17 +31,24 @@
 ### LSP (Language Server)
 - `K` - **Show documentation** (hover info)
 - `gd` - **Go to definition**
-- `gr` - Find references
+- `gR` - **Find references** (all usages)
+- `gD` - Go to declaration
 - `gi` - Go to implementation
+- `gt` - Go to type definition
 - `<leader>ca` - **Code actions** (quick fixes)
 - `<leader>rn` - **Rename symbol**
 - `<leader>d` - Show line diagnostics
+- `<leader>D` - Show all diagnostics in file
 - `]d` / `[d` - Next/Previous error
+- `<leader>o` - Show outline (symbols)
+- `<leader>rs` - Restart LSP
+- `<C-k>` - Signature help
 
 ### Code Editing
 - `gcc` - **Comment/uncomment line**
 - `gc` (visual) - Comment selection
-- `<leader>fm` - **Format file**
+- `<leader>fm` - **Format file or selection** (manual)
+- `<leader>tf` - **Toggle format on save** (OFF by default)
 - `J` (visual) - Move line down
 - `K` (visual) - Move line up
 - `>` / `<` (visual) - Indent/Outdent
