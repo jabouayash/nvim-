@@ -1,5 +1,22 @@
 return {
-  -- Modern colorscheme
+  -- ===========================================
+  -- COLORSCHEME: Uncomment ONE of the options below
+  -- ===========================================
+
+  -- OPTION 1: Dracula (brighter, matches tmux)
+  -- {
+  --   "dracula/vim",
+  --   name = "dracula",
+  --   lazy = false,
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd.colorscheme "dracula"
+  --     vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+  --     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+  --   end,
+  -- },
+
+  -- OPTION 2: Catppuccin (softer, pastel)
   {
     "catppuccin/nvim",
     name = "catppuccin",
@@ -7,8 +24,8 @@ return {
     priority = 1000,
     config = function()
       require("catppuccin").setup({
-        flavour = "mocha", -- latte, frappe, macchiato, mocha
-        transparent_background = false,
+        flavour = "mocha",
+        transparent_background = true,
         term_colors = true,
         integrations = {
           cmp = true,
