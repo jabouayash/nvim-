@@ -16,7 +16,7 @@ local on_attach = function(client, bufnr)
   keymap.set({ "n", "v" }, "<leader>ca", "<cmd>Lspsaga code_action<CR>", opts)
   keymap.set("n", "<leader>rn", "<cmd>Lspsaga rename<CR>", opts)
   keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
-  keymap.set("n", "<leader>d", "<cmd>Lspsaga show_line_diagnostics<CR>", opts)
+  keymap.set("n", "<leader>dl", "<cmd>Lspsaga show_line_diagnostics<CR>", opts)
   keymap.set("n", "[d", "<cmd>Lspsaga diagnostic_jump_prev<CR>", opts)
   keymap.set("n", "]d", "<cmd>Lspsaga diagnostic_jump_next<CR>", opts)
   keymap.set("n", "K", "<cmd>Lspsaga hover_doc<CR>", opts)
@@ -30,15 +30,16 @@ end
 -- Used to enable autocompletion (assign to every lsp server config)
 local capabilities = cmp_nvim_lsp.default_capabilities()
 
--- Change the Diagnostic symbols in the sign column (gutter)
-local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
-end
-
--- Configure diagnostics
+-- Configure diagnostics (signs use the modern severity-keyed API)
 vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = " ",
+      [vim.diagnostic.severity.WARN] = " ",
+      [vim.diagnostic.severity.HINT] = " ",
+      [vim.diagnostic.severity.INFO] = " ",
+    },
+  },
   virtual_text = {
     prefix = "●",
     source = "if_many",
@@ -227,9 +228,6 @@ local servers = {
       },
     },
   },
-
-  -- C# / .NET
-  csharp_ls = {},
 
   -- Java
   jdtls = {

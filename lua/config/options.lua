@@ -2,10 +2,6 @@
 local opt = vim.opt
 local g = vim.g
 
--- Set leader key
-g.mapleader = " "
-g.maplocalleader = " "
-
 -- Nerd Font support
 g.have_nerd_font = true
 
@@ -76,8 +72,7 @@ opt.list = true
 opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 -- Performance
-opt.lazyredraw = false
-opt.timeoutlen = 500  -- Increased for Which-key
+opt.timeoutlen = 300  -- which-key recommends 300
 opt.ttimeoutlen = 10  -- Faster escape key response
 
 -- Folding
@@ -87,7 +82,3 @@ opt.foldenable = false
 
 -- GUI font (for Neovide or GUI Neovim)
 opt.guifont = "JetBrainsMono Nerd Font:h14"
-
--- Disable netrw (we're using nvim-tree)
-g.loaded_netrw = 1
-g.loaded_netrwPlugin = 1

@@ -283,7 +283,7 @@ return {
     event = "VeryLazy",
     opts = {
       preset = "modern", -- modern, classic, or helix
-      delay = 500, -- delay before showing the popup
+      delay = 200, -- must be below timeoutlen (300) for the popup to show before keymaps time out
       plugins = {
         marks = true,
         registers = true,
@@ -393,6 +393,24 @@ return {
     end,
   },
 
+  -- Diff review (whole-changeset view, file history)
+  {
+    "sindrets/diffview.nvim",
+    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory", "DiffviewToggleFiles" },
+    keys = {
+      { "<leader>gs", "<cmd>DiffviewOpen<CR>", desc = "Review pending changes" },
+      { "<leader>gc", "<cmd>DiffviewClose<CR>", desc = "Close diffview" },
+      { "<leader>gh", "<cmd>DiffviewFileHistory %<CR>", desc = "File history (current)" },
+      { "<leader>gH", "<cmd>DiffviewFileHistory<CR>", desc = "File history (repo)" },
+    },
+    opts = {
+      enhanced_diff_hl = true,
+      view = {
+        merge_tool = { layout = "diff3_mixed" },
+      },
+    },
+  },
+
   -- Indent guides
   {
     "lukas-reineke/indent-blankline.nvim",
@@ -473,18 +491,19 @@ return {
         },
       })
 
-      -- Terminal keymaps
-      function _G.set_terminal_keymaps()
-        local opts = { buffer = 0 }
-        vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
-        vim.keymap.set("t", "jk", [[<C-\><C-n>]], opts)
-        vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], opts)
-        vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], opts)
-        vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], opts)
-        vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]], opts)
-      end
-
-      vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
+      vim.api.nvim_create_autocmd("TermOpen", {
+        pattern = "term://*",
+        group = vim.api.nvim_create_augroup("ToggletermKeymaps", { clear = true }),
+        callback = function(args)
+          local opts = { buffer = args.buf }
+          vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
+          vim.keymap.set("t", "jk", [[<C-\><C-n>]], opts)
+          vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], opts)
+          vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], opts)
+          vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], opts)
+          vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]], opts)
+        end,
+      })
     end,
   },
 
@@ -576,7 +595,7 @@ return {
           "ts_ls", -- TypeScript/JavaScript
           "rust_analyzer",
           -- "gopls", -- Requires Go to be installed
-          "omnisharp", -- C# / .NET
+          -- "omnisharp", -- C# / .NET (re-enable + add csharp_ls config in lsp.lua to use)
           "bashls",
           "jsonls",
           "yamlls",

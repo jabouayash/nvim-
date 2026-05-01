@@ -37,7 +37,7 @@
 - `gt` - Go to type definition
 - `<leader>ca` - **Code actions** (quick fixes)
 - `<leader>rn` - **Rename symbol**
-- `<leader>d` - Show line diagnostics
+- `<leader>dl` - Show line diagnostics
 - `<leader>D` - Show all diagnostics in file
 - `]d` / `[d` - Next/Previous error
 - `<leader>o` - Show outline (symbols)
@@ -75,12 +75,19 @@
 - `<Esc>` - Exit terminal mode (in terminal)
 - `jk` - Alternative exit from terminal
 
-### Git
-- `<leader>gs` - Git status (Fugitive)
+### Git — Diff Review (Diffview)
+- `<leader>gs` - **Review pending changes** (open Diffview tab — your AI-edit review entry point)
+- `<leader>gc` - Close Diffview
+- `<leader>gh` - File history (current file)
+- `<leader>gH` - File history (whole repo)
+
+### Git — Hunks (Gitsigns)
 - `]h` / `[h` - Next/Previous git change
 - `<leader>hs` - Stage hunk
 - `<leader>hr` - Reset hunk
 - `<leader>hp` - Preview hunk
+- `<leader>hb` - Blame line (full)
+- `<leader>tb` - Toggle inline blame
 
 ## 🔍 Telescope (Fuzzy Finder)
 

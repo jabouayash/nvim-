@@ -1,11 +1,17 @@
 -- Neovim Configuration
--- Set leader key to space
+
+-- Leader keys must be set before lazy.nvim loads, so plugin specs that
+-- reference <leader> resolve correctly.
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Disable netrw before any plugin loads, since nvim-tree replaces it.
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
   vim.fn.system({
     "git",
     "clone",
@@ -23,11 +29,9 @@ require("lazy").setup("plugins", {
     notify = false,
   },
   rocks = {
-    enabled = false, -- Disable luarocks support
+    enabled = false,
   },
 })
 
--- Basic settings
 require("config.options")
 require("config.keymaps")
-require("config.netrw")
