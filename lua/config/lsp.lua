@@ -1,4 +1,3 @@
-local lspconfig = require("lspconfig")
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
 local keymap = vim.keymap
@@ -259,10 +258,15 @@ local servers = {
 
 }
 
--- Setup each server
-for server, config in pairs(servers) do
-  lspconfig[server].setup(vim.tbl_deep_extend("force", {
-    on_attach = on_attach,
-    capabilities = capabilities,
-  }, config))
+-- Apply shared on_attach + capabilities to every server, then layer
+-- per-server settings on top. This uses the nvim-0.11+ vim.lsp API;
+-- the legacy `lspconfig[name].setup()` framework is deprecated and
+-- removed in nvim-lspconfig v3.0.0.
+vim.lsp.config("*", {
+  on_attach = on_attach,
+  capabilities = capabilities,
+})
+for name, config in pairs(servers) do
+  vim.lsp.config(name, config)
 end
+vim.lsp.enable(vim.tbl_keys(servers))
