@@ -81,6 +81,12 @@ return {
       })
 
       require("mason-lspconfig").setup({
+        -- Don't auto-enable installed mason packages as LSPs. We configure
+        -- and start each server manually in `lua/config/lsp.lua`. Without
+        -- this, mason-lspconfig tries to start tools like `stylua` as a
+        -- language server (it's a formatter, has no `--lsp` mode), which
+        -- spams errors and races with our settings.
+        automatic_enable = false,
         ensure_installed = {
           "lua_ls",
           "pyright",
