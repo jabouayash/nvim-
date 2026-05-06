@@ -60,6 +60,12 @@ nvim .
 4. **Rename**: Cursor on variable, `<leader>rn`, type new name
 5. **Fix error**: When you see red underline, `<leader>ca` for fixes
 
+### Reviewing Changes (great for AI-edited files)
+1. **See all pending changes**: `<leader>gs` opens a Diffview tab
+2. **Navigate files** in the left panel; diff shows on the right
+3. **Close**: `<leader>gc` (or `:tabclose`)
+4. **History of current file**: `<leader>gh`
+
 ### Quick Edits
 - **Comment line**: `gcc`
 - **Delete line**: `dd`

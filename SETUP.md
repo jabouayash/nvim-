@@ -51,10 +51,11 @@ gem install neovim
 # Language-specific (install only what you need):
 # Go (for gopls)
 brew install go
-
-# .NET (for C# development)
-brew install --cask dotnet-sdk
 ```
+
+> C# / .NET support is **disabled** in this config. To re-enable: uncomment
+> `omnisharp` in `lua/plugins/init.lua` and add a server config in
+> `lua/config/lsp.lua`, then `brew install --cask dotnet-sdk`.
 
 ## First Time Setup
 
@@ -96,8 +97,9 @@ brew install --cask dotnet-sdk
 - `<C-\>` - Toggle floating terminal
 
 ### Git Integration
-- Git signs in gutter show changes
-- `<leader>gs` - Git status (if fugitive installed)
+- Git signs in gutter show changes (gitsigns)
+- `<leader>gs` - Review pending changes (Diffview)
+- `<leader>gh` / `<leader>gH` - File history (current file / whole repo)
 - `]h` / `[h` - Navigate git hunks
 
 ### LSP Features
@@ -153,7 +155,7 @@ Edit `lua/config/keymaps.lua`
 ✅ File Explorer Sidebar (nvim-tree)
 ✅ Tabs for open files (bufferline)
 ✅ Integrated Terminal (toggleterm)
-✅ Git integration (gitsigns + fugitive)
+✅ Git integration (gitsigns + diffview)
 ✅ Fuzzy file search (telescope)
 ✅ Command palette (which-key + telescope commands)
 ✅ Auto-completion with icons (nvim-cmp + lspkind)
