@@ -41,7 +41,8 @@ of falling through to vim defaults in non-LSP buffers.
 - `<leader>li` - **Implementations**
 - `<leader>ly` - Type definition
 - `<leader>lr` - **References** (all usages)
-- `<leader>ld` - Document diagnostics
+- `<leader>ld` - Document diagnostics (Telescope picker)
+- `<leader>le` - Line diagnostics (popup for current line)
 - `<leader>lo` - Outline (symbols)
 - `<leader>ls` - Restart LSP
 - `<leader>lh` - LSP healthcheck (when "feels broken")
@@ -49,7 +50,6 @@ of falling through to vim defaults in non-LSP buffers.
 **Conventional**:
 - `<leader>ca` - **Code actions** (quick fixes)
 - `<leader>rn` - **Rename symbol**
-- `<leader>dl` - Show line diagnostics
 - `]d` / `[d` - Next/Previous diagnostic
 - `<C-k>` - Signature help
 

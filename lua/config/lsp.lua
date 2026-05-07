@@ -288,7 +288,10 @@ map("n", "<leader>lh", "<cmd>checkhealth vim.lsp<CR>",           { desc = "LSP h
 -- Conventional bindings (kept at familiar locations, now bug-free)
 map({ "n", "v" }, "<leader>ca", lsp_cmd("Lspsaga code_action"),         { desc = "Code action" })
 map("n", "<leader>rn", lsp_cmd("Lspsaga rename"),                       { desc = "Rename symbol" })
-map("n", "<leader>dl", lsp_cmd("Lspsaga show_line_diagnostics"),        { desc = "Line diagnostics" })
+-- Line diagnostics: lives under <leader>l, not <leader>d, because
+-- <leader>d is the delete-no-yank operator and the prefix overlap
+-- causes a 300ms operator-pending stall on slow keypresses.
+map("n", "<leader>le", lsp_cmd("Lspsaga show_line_diagnostics"),        { desc = "Line diagnostics (current line)" })
 
 -- Diagnostic nav: vim.diagnostic works without LSP (diagnostics can
 -- come from other sources), so no availability check needed.
