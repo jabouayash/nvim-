@@ -79,6 +79,15 @@ return {
       }) do
         vim.api.nvim_set_hl(0, group, { bg = "NONE" })
       end
+
+      -- NormalFloat / FloatBorder: catppuccin's transparent_background
+      -- only nulls Normal (buffer bg), but explicitly sets NormalFloat to
+      -- the mantle color (#181825), making every float opaque. Lspsaga's
+      -- hover/diagnostic/code-action floats and snacks.nvim's terminal /
+      -- picker / dashboard all link their backgrounds to NormalFloat, so
+      -- nulling it once cascades transparency to all of them.
+      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
+      vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE" })
     end
 
     vim.api.nvim_create_autocmd("ColorScheme", {
