@@ -45,8 +45,9 @@ return {
     -- `nocombine = true` prevents CursorLine from diluting the diff bgs when
     -- the cursor crosses a diff line. Survives :colorscheme reloads.
     local function apply_diff_hl()
-      local ok, cp = pcall(require("catppuccin.palettes").get_palette, "mocha")
+      local ok, palettes = pcall(require, "catppuccin.palettes")
       if not ok then return end
+      local cp = palettes.get_palette("mocha")
 
       -- Line-level groups: bg only (no fg) so syntax highlighting shows through.
       vim.api.nvim_set_hl(0, "DiffAdd",    { bg = "#1e4d2b", nocombine = true })
@@ -67,7 +68,7 @@ return {
     end
 
     vim.api.nvim_create_autocmd("ColorScheme", {
-      pattern = "*",
+      pattern = "catppuccin*",
       callback = apply_diff_hl,
     })
     apply_diff_hl()
