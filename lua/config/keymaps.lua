@@ -112,6 +112,11 @@ end, { desc = "Toggle format on save" })
 keymap.set("v", "<", "<gv", { desc = "Indent left" })
 keymap.set("v", ">", ">gv", { desc = "Indent right" })
 
+-- Horizontal scroll: 10 columns per press instead of vim's default 1.
+-- Use zL / zH (uppercase) for half-screen jumps, still vanilla.
+keymap.set("n", "zl", "10zl", { silent = true, desc = "Scroll right 10 cols" })
+keymap.set("n", "zh", "10zh", { silent = true, desc = "Scroll left 10 cols" })
+
 -- Disable Q (ex mode)
 keymap.set("n", "Q", "<nop>")
 
