@@ -51,9 +51,10 @@ return {
       { "<leader>h", group = "hunk/git" },
       { "<leader>l", group = "lsp" },
       { "<leader>q", group = "session" },
+      { "<leader>r", group = "rename" },
       { "<leader>s", group = "split/search" },
-      { "<leader>t", group = "terminal/tab" },
-      { "<leader>x", group = "diagnostics" },
+      { "<leader>t", group = "tab/toggle/term" },
+      { "<leader>x", group = "diagnostics/trouble" },
     })
   end,
 }

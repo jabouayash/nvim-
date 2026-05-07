@@ -29,19 +29,28 @@
 ## 💻 Coding Features
 
 ### LSP (Language Server)
+Bindings are registered globally and notify "No LSP attached" instead
+of falling through to vim defaults in non-LSP buffers.
+
+**Universal go-to** (preserve cross-editor convention):
 - `K` - **Show documentation** (hover info)
 - `gd` - **Go to definition**
-- `gR` - **Find references** (all usages)
 - `gD` - Go to declaration
-- `gi` - Go to implementation
-- `gt` - Go to type definition
+
+**`<leader>l` namespace** (frees `gi`/`gt`/`gR` for vim defaults):
+- `<leader>li` - **Implementations**
+- `<leader>ly` - Type definition
+- `<leader>lr` - **References** (all usages)
+- `<leader>ld` - Document diagnostics
+- `<leader>lo` - Outline (symbols)
+- `<leader>ls` - Restart LSP
+- `<leader>lh` - LSP healthcheck (when "feels broken")
+
+**Conventional**:
 - `<leader>ca` - **Code actions** (quick fixes)
 - `<leader>rn` - **Rename symbol**
 - `<leader>dl` - Show line diagnostics
-- `<leader>D` - Show all diagnostics in file
-- `]d` / `[d` - Next/Previous error
-- `<leader>o` - Show outline (symbols)
-- `<leader>rs` - Restart LSP
+- `]d` / `[d` - Next/Previous diagnostic
 - `<C-k>` - Signature help
 
 ### Code Editing
@@ -57,7 +66,7 @@
 - `/` - Search in file
 - `n` / `N` - Next/Previous search result
 - `<leader>sr` - **Replace word under cursor**
-- `<leader>nh` - Clear search highlights
+- `<leader>n` - Clear search highlights
 - `*` - Search word under cursor
 
 ## 🎯 Quick Actions

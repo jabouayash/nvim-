@@ -5,7 +5,7 @@ local keymap = vim.keymap
 keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
 
 -- Clear search highlights
-keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" })
+keymap.set("n", "<leader>n", ":nohl<CR>", { desc = "Clear search highlights" })
 
 -- Window management
 keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })
@@ -64,8 +64,9 @@ keymap.set("n", "<leader>Y", [["+Y]], { desc = "Yank line to clipboard" })
 -- Search and replace word under cursor
 keymap.set("n", "<leader>sr", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor" })
 
--- Make file executable
-keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file executable" })
+-- Make file executable. `<leader>X` (capital) so it doesn't shadow the
+-- `<leader>x` diagnostics group prefix.
+keymap.set("n", "<leader>X", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file executable" })
 
 -- Quickfix navigation
 keymap.set("n", "]Q", "<cmd>cnext<CR>zz", { desc = "Next quickfix" })

@@ -1,30 +1,26 @@
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
-local keymap = vim.keymap
-
--- LSP keybindings function
-local on_attach = function(client, bufnr)
-  local opts = { noremap = true, silent = true, buffer = bufnr }
-
-  -- Key mappings using Lspsaga
-  keymap.set("n", "gR", "<cmd>Telescope lsp_references<CR>", opts)
-  keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-  keymap.set("n", "gd", "<cmd>Lspsaga goto_definition<CR>", opts)
-  keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts)
-  keymap.set("n", "gt", "<cmd>Lspsaga goto_type_definition<CR>", opts)
-  keymap.set({ "n", "v" }, "<leader>ca", "<cmd>Lspsaga code_action<CR>", opts)
-  keymap.set("n", "<leader>rn", "<cmd>Lspsaga rename<CR>", opts)
-  keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts)
-  keymap.set("n", "<leader>dl", "<cmd>Lspsaga show_line_diagnostics<CR>", opts)
-  keymap.set("n", "[d", "<cmd>Lspsaga diagnostic_jump_prev<CR>", opts)
-  keymap.set("n", "]d", "<cmd>Lspsaga diagnostic_jump_next<CR>", opts)
-  keymap.set("n", "K", "<cmd>Lspsaga hover_doc<CR>", opts)
-  keymap.set("n", "<leader>o", "<cmd>Lspsaga outline<CR>", opts)
-  keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts)
-
-  -- Signature help
-  keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+-- LSP keymaps are registered globally (not in on_attach) so the bindings
+-- exist in every buffer regardless of LSP attachment. Without this, keys
+-- like <leader>rn fall through to vim defaults in non-LSP buffers
+-- (<Space> -> "right", r -> "replace char", n -> the replacement),
+-- silently mangling text. Each handler checks for an attached client
+-- and notifies instead of erroring.
+local function lsp_action(fn)
+  return function()
+    if #vim.lsp.get_clients({ bufnr = 0 }) == 0 then
+      vim.notify("No LSP attached to this buffer", vim.log.levels.WARN)
+      return
+    end
+    fn()
+  end
 end
+
+local function lsp_cmd(cmd)
+  return lsp_action(function() vim.cmd(cmd) end)
+end
+
+local on_attach = function(_, _) end -- no-op; kept so the call site below is unchanged
 
 -- Used to enable autocompletion (assign to every lsp server config)
 local capabilities = cmp_nvim_lsp.default_capabilities()
@@ -270,3 +266,34 @@ for name, config in pairs(servers) do
   vim.lsp.config(name, config)
 end
 vim.lsp.enable(vim.tbl_keys(servers))
+
+-- Global LSP keymaps. Bound at module scope (not in on_attach) so they
+-- exist regardless of LSP attachment -- see comment at top of file.
+local map = vim.keymap.set
+
+-- Universal "go to" (kept at top-level: cross-editor convention)
+map("n", "gd", lsp_cmd("Lspsaga goto_definition"), { desc = "LSP: go to definition" })
+map("n", "gD", lsp_action(vim.lsp.buf.declaration),  { desc = "LSP: go to declaration" })
+map("n", "K",  lsp_cmd("Lspsaga hover_doc"),         { desc = "LSP: hover docs" })
+
+-- LSP namespace (frees vim's gi / gt / gR for their defaults)
+map("n", "<leader>li", "<cmd>Telescope lsp_implementations<CR>", { desc = "Implementations" })
+map("n", "<leader>ly", lsp_cmd("Lspsaga goto_type_definition"),  { desc = "Type definition" })
+map("n", "<leader>lr", "<cmd>Telescope lsp_references<CR>",      { desc = "References" })
+map("n", "<leader>ld", "<cmd>Telescope diagnostics bufnr=0<CR>", { desc = "Document diagnostics" })
+map("n", "<leader>lo", lsp_cmd("Lspsaga outline"),               { desc = "Outline" })
+map("n", "<leader>ls", "<cmd>LspRestart<CR>",                    { desc = "Restart LSP" })
+map("n", "<leader>lh", "<cmd>checkhealth vim.lsp<CR>",           { desc = "LSP healthcheck" })
+
+-- Conventional bindings (kept at familiar locations, now bug-free)
+map({ "n", "v" }, "<leader>ca", lsp_cmd("Lspsaga code_action"),         { desc = "Code action" })
+map("n", "<leader>rn", lsp_cmd("Lspsaga rename"),                       { desc = "Rename symbol" })
+map("n", "<leader>dl", lsp_cmd("Lspsaga show_line_diagnostics"),        { desc = "Line diagnostics" })
+
+-- Diagnostic nav: vim.diagnostic works without LSP (diagnostics can
+-- come from other sources), so no availability check needed.
+map("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end,  { desc = "Next diagnostic" })
+map("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, { desc = "Previous diagnostic" })
+
+-- Signature help (insert mode only is conventional, but normal-mode is fine)
+map("n", "<C-k>", lsp_action(vim.lsp.buf.signature_help), { desc = "Signature help" })
