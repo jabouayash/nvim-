@@ -45,6 +45,7 @@ return {
     wk.setup(opts)
 
     wk.add({
+      { "<leader>a", group = "ai/claude" },
       { "<leader>b", group = "buffer" },
       { "<leader>f", group = "find" },
       { "<leader>g", group = "git" },
